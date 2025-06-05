@@ -13,19 +13,40 @@ This project is not affiliated with Auth0.
 
 Take a look at the sample app provided in =sample/= to see how it's used in a MWE.
 There are only a few steps.
-First, include the app in your apps:
+First, include the app in your apps in your Django settings:
 
 #+begin_src
+INSTALLED_APPS = [
+    ...,
+    "django_auth0_auth",
+]
 #+end_src
 
-Next, include the auth backend
+Next, include the auth settings and auth backend (also in your Django settings):
 
 #+begin_src
+AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID")
+AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
+AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
+AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE")
+# tell the lib where you put it's callback
+CALLBACK_URI = "/auth0/callback"
+LOGIN_URL = "/auth0/login"
+
+AUTHENTICATION_BACKENDS = [
+    "django_auth0_auth.backend.Auth0Backend",
+]
 #+end_src
 
-Finally, include the urls
+Finally, include the urls in your project =urls.py=:
 
 #+begin_src
+from django.urls import path, include
+
+urlpatterns = [
+    ...,
+    path("auth0/", include("django_auth0_auth.urls")),
+]
 #+end_src
 
 ** Running the sample app
