@@ -1,0 +1,24 @@
+* django-auth0-auth
+
+Authentication backend for Django with Auth0.
+
+This project is not affiliated with Auth0.
+
+** Usage
+
+Take a look at the sample app provided in =sample/= to see how it's used in a MWE.
+There are only a few steps.
+First, include the app in your apps:
+
+#+begin_src 
+#+end_src
+
+Next, include the auth backend
+
+#+begin_src 
+#+end_src
+
+Finally, include the urls
+
+#+begin_src  
+#+end_src

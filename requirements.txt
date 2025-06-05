@@ -1,0 +1,2 @@
+django >= 5.0.0
+authlib >= 1.2.0
