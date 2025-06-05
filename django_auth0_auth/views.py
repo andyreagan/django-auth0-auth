@@ -5,7 +5,7 @@ from authlib.integrations.django_client import OAuth
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, reverse
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ def login(request):
     return oauth.auth0.authorize_redirect(
         request,
         # this is our callback
-        request.build_absolute_uri(settings.CALLBACK_URI),
+        request.build_absolute_uri(reverse("auth0_callback")),
         audience=settings.AUTH0_AUDIENCE,
     )
 
@@ -41,7 +41,7 @@ def logout(request):
         f"https://{settings.AUTH0_DOMAIN}/v2/logout?"
         + urlencode(
             {
-                "returnTo": request.build_absolute_uri(settings.CALLBACK_URI),
+                "returnTo": request.build_absolute_uri(reverse("auth0_callback")),
                 "client_id": settings.AUTH0_CLIENT_ID,
             },
             quote_via=quote_plus,
@@ -55,13 +55,17 @@ def callback(request):
 
     There are a few paths:
     1. If we have a code, we'll attempt to log in the user (and redirect to next_url or go into next flow).
-    2. If we have a user already logged in, we can send them to next_url.
+    2. If we have a user already logged in, we can send them to next_url (or to a landing page).
     3. If we don't have a code or a user, show a login button.
     """
     # path (3) above
     if request.GET.get("code") is None and request.session.get("user") is None:
         logger.info("We have no code or user session, show login screen")
-        return render(request, "django_auth0_auth/login_failed.html")
+        # this would send them over to index so they could refresh the page...
+        # we need to get them off of the "callback" url
+        if "callback" in request.path:
+            return redirect(reverse("auth0"))
+        render(request, "django_auth0_auth/index.html")
     # path (1) above, we have code
     # Don't care whether there is a user or not
     elif request.GET.get("code") is not None:
@@ -89,7 +93,6 @@ def callback(request):
             return redirect(next_url)
         # if we didn't redirect,
         # we'll fall out to path (2)
-
     # there is no code, so we know there is a user already
     # get the user for path (2)
     else:
@@ -101,4 +104,6 @@ def callback(request):
         # user = Customer.objects.get(customerId=userinfo['sub'])
         user = request.user
 
-    return render(request, "web/index.html")
+    if "callback" in request.path:
+        return redirect(reverse("auth0"))
+    return render(request, "django_auth0_auth/index.html")
