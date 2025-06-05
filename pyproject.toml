@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-auth0-auth"
+version = "0.0.1"
+description = "Auth0 Authentication Backend for Django"
+authors = [{name = "Andy Reagan", email = "andy@andyreagan.com"}]
+license = "MIT"
+readme = {file = "README.md", content-type = "text/markdown"}
+homepage = "https://github.com/andyreagan/django-auth0-auth"
+repository = "https://github.com/andyreagan/django-auth0-auth"
+dependencies = [
+    "django>=5.0.0",
+    "authlib>=1.2.0",
+]
+requires-python = ">=3.11"
+keywords = ["django", "auth0", "django auth", "django auth0"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+    "Framework :: Django",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["django-auth0-auth"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

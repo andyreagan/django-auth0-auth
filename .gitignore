@@ -1,2 +1,4 @@
 .venv/
 *~
+# prefer the org version:
+README.md
