@@ -73,10 +73,11 @@ Go to http://localhost:8000/auth0 and log in!
 
 ** Next steps
 
-+ [ ] Test that it works with the sample app (create an auth0 account to test)
-+ [ ] Run through genAI to look for general improvements (is all the logic we have in the views/index the right place for this?)
++ [X] Test that it works with the sample app (create an auth0 account to test)
++ [ ] Run through genAI to look for general improvements:
+      is all the logic we have in the views/index the right place for this?
 + [X] Add pre-commit code checks
 + [X] Add automated release via github action
-+ [ ] Flesh out user documentation here in README
++ [X] Flesh out user documentation here in README
 + [ ] Add automated tests
 + [ ] Profit

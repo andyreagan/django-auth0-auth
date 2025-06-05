@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "django-auth0-auth"
+name = "django-auth0-authbackend"
 version = "0.0.3"
 description = "Auth0 Authentication Backend for Django"
 authors = [{name = "Andy Reagan", email = "andy@andyreagan.com"}]
