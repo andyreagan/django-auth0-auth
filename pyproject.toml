@@ -13,7 +13,9 @@ homepage = "https://github.com/andyreagan/django-auth0-auth"
 repository = "https://github.com/andyreagan/django-auth0-auth"
 dependencies = [
     "django>=5.0.0",
-    "authlib>=1.2.0",
+    "authlib>=1.0.0",
+    # authlib imports requests but doesn't declare it?
+    "requests>=2.0.0"
 ]
 requires-python = ">=3.11"
 keywords = ["django", "auth0", "django auth", "django auth0"]

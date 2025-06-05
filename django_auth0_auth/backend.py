@@ -22,9 +22,10 @@ class Auth0Backend(BaseBackend):
 
         # Here you would typically create or get the user from your database
         user, created = User.objects.get_or_create(
-            customerId=user_info["sub"],
-            defaults={"is_active": True},
-            # defaults={'email': user_info['email']}
+            **{
+                User.USERNAME_FIELD: user_info["sub"],
+                "defaults": {"is_active": True},
+            }
         )
         print(f"user was {created=}")
 

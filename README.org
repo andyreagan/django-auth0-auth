@@ -28,6 +28,31 @@ Finally, include the urls
 #+begin_src
 #+end_src
 
+** Running the sample app
+
+First, create an auth0 application.
+
+Set up python however you prefer, I'll use a virtual env:
+
+#+begin_src
+~/.pyenv/versions/3.11.10/bin/python -m venv .venv
+source .venv/bin/activate
+pip install .
+#+end_src
+
+Running the sample app, we can do:
+
+#+begin_src
+export AUTH0_CLIENT_ID=...
+export AUTH0_CLIENT_SECRET=...
+export AUTH0_DOMAIN=...
+export AUTH0_AUDIENCE=...
+python manage.py migrate
+python manage.py runserver
+#+end_src
+
+Go to http://localhost:8000/auth0 and log in!
+
 ** Next steps
 
 + [ ] Test that it works with the sample app (create an auth0 account to test)

@@ -2,3 +2,5 @@
 *~
 # prefer the org version:
 README.md
+__pycache__/
+db.sqlite3
