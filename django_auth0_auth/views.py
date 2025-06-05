@@ -49,7 +49,7 @@ def logout(request):
     )
 
 
-def index(request):
+def callback(request):
     """
     Index is both our landing URL and our de-facto auth0 callback.
 
@@ -89,7 +89,7 @@ def index(request):
             return redirect(next_url)
         # if we didn't redirect,
         # we'll fall out to path (2)
-        
+
     # there is no code, so we know there is a user already
     # get the user for path (2)
     else:
@@ -101,9 +101,4 @@ def index(request):
         # user = Customer.objects.get(customerId=userinfo['sub'])
         user = request.user
 
-    return render(
-        request,
-        "web/index.html"
-    )
-
-
+    return render(request, "web/index.html")

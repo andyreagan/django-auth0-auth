@@ -1,6 +1,11 @@
 * django-auth0-auth
 
 Authentication backend for Django with Auth0.
+As of June 2025, all of the libraries that I saw for Django Auth0 target old versions of Django,
+we'll start this by supporting version 5+ and python 3.11+ (3.10 only has 1 year of life).
+Also, some of these don't actually subclass Django's =AuthBackend= and implement a login system that is more
+"beside" Django than integrated with it.
+Because this is fully integrated, we can use Django's built-in =@login_required= decorator and it's auth Mixins.
 
 This project is not affiliated with Auth0.
 
@@ -10,24 +15,24 @@ Take a look at the sample app provided in =sample/= to see how it's used in a MW
 There are only a few steps.
 First, include the app in your apps:
 
-#+begin_src 
+#+begin_src
 #+end_src
 
 Next, include the auth backend
 
-#+begin_src 
+#+begin_src
 #+end_src
 
 Finally, include the urls
 
-#+begin_src  
+#+begin_src
 #+end_src
 
 ** Next steps
 
 + [ ] Test that it works with the sample app (create an auth0 account to test)
 + [ ] Run through genAI to look for general improvements (is all the logic we have in the views/index the right place for this?)
-+ [ ] Add pre-commit code checks
++ [X] Add pre-commit code checks
 + [ ] Add automated release via github action
 + [ ] Flesh out user documentation here in README
 + [ ] Add automated tests
