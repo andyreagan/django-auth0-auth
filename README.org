@@ -56,6 +56,11 @@ AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
 AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE")
 
+# Optional: Configure callback URI (defaults to 'auth0_callback')
+# AUTH0_CALLBACK_URI = 'auth0'  # Use home URL instead of callback URL
+# AUTH0_CALLBACK_URI = '/custom/path'  # Use custom path
+# AUTH0_CALLBACK_URI = 'https://example.com/callback'  # Use full URL
+
 AUTHENTICATION_BACKENDS = [
     "auth0.backend.Auth0Backend",
 ]
@@ -96,6 +101,30 @@ python manage.py runserver
 #+end_src
 
 Go to http://localhost:8000/auth0 and log in!
+
+** Configuration Options
+
+*** Callback URI Configuration
+
+By default, this library uses the =auth0_callback= URL as the callback URI sent to Auth0. You can customize this behavior using the =AUTH0_CALLBACK_URI= setting:
+
+#+begin_src
+# Use the home URL instead of callback URL (recommended for cleaner UX)
+AUTH0_CALLBACK_URI = 'auth0'
+
+# Use a custom path
+AUTH0_CALLBACK_URI = '/custom/callback/path'
+
+# Use a full URL (useful for different domains)
+AUTH0_CALLBACK_URI = 'https://yourdomain.com/auth/callback'
+#+end_src
+
+The setting accepts:
+- URL name (e.g., ='auth0'= or ='auth0_callback'=)
+- Relative path (e.g., ='/custom/path'=)
+- Full URL (e.g., ='https://example.com/callback'=)
+
+*Note:* Make sure to update your Auth0 application's "Allowed Callback URLs" to match your configured callback URI.
 
 ** Next steps
 

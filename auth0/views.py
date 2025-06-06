@@ -22,6 +22,30 @@ oauth.register(
 )
 
 
+def get_callback_uri(request):
+    """
+    Get the callback URI to send to Auth0.
+    Can be configured via AUTH0_CALLBACK_URI setting.
+    Defaults to the auth0_callback URL.
+    """
+    callback_uri_name = getattr(settings, 'AUTH0_CALLBACK_URI', 'auth0_callback')
+    
+    # If it's a URL name (default behavior)
+    if callback_uri_name in ['auth0_callback', 'auth0']:
+        return request.build_absolute_uri(reverse(callback_uri_name))
+    
+    # If it's a custom path, build the full URI
+    if callback_uri_name.startswith('/'):
+        return request.build_absolute_uri(callback_uri_name)
+    
+    # If it's already a full URI, return as-is
+    if callback_uri_name.startswith('http'):
+        return callback_uri_name
+    
+    # Default fallback
+    return request.build_absolute_uri(reverse('auth0_callback'))
+
+
 def login(request):
     if next_url := request.GET.get("next_url"):
         # store this in the sessino
@@ -29,7 +53,7 @@ def login(request):
     return oauth.auth0.authorize_redirect(
         request,
         # this is our callback
-        request.build_absolute_uri(reverse("auth0_callback")),
+        get_callback_uri(request),
         audience=settings.AUTH0_AUDIENCE,
     )
 
@@ -41,7 +65,7 @@ def logout(request):
         f"https://{settings.AUTH0_DOMAIN}/v2/logout?"
         + urlencode(
             {
-                "returnTo": request.build_absolute_uri(reverse("auth0_callback")),
+                "returnTo": get_callback_uri(request),
                 "client_id": settings.AUTH0_CLIENT_ID,
             },
             quote_via=quote_plus,
