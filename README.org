@@ -1,4 +1,9 @@
+#+CREATED: [2025-06-06 Fri 14:01]
+#+DATE: [2025-06-06 Fri 14:01]
 * django-auth0-auth
+
+[[https://pypi.org/project/django-auth0-authbackend/][https://img.shields.io/pypi/v/django-auth0-authbackend.svg]]
+[[https://github.com/andyreagan/django-auth0-auth/actions/workflows/python-test-publish.yml][https://github.com/andyreagan/django-auth0-auth/actions/workflows/python-test-publish.yml/badge.svg]]
 
 Authentication backend for Django with Auth0.
 As of June 2025, all of the libraries that I saw for Django Auth0 target old versions of Django,
@@ -8,6 +13,11 @@ Also, some of these don't actually subclass Django's =AuthBackend= and implement
 Because this is fully integrated, we can use Django's built-in =@login_required= decorator and it's auth Mixins.
 
 This project is not affiliated with Auth0.
+
+*Features:*
+- Fully automated end-to-end testing with Playwright to ensure Auth0 integration works correctly
+- Complete Django authentication backend integration using Django's built-in auth system
+- Support for modern Django (5+) and Python (3.11+) versions
 
 The names are slightly confusing because there are a lot of one-off projects 
 (like this one)
@@ -95,5 +105,5 @@ Go to http://localhost:8000/auth0 and log in!
 + [X] Add pre-commit code checks
 + [X] Add automated release via github action
 + [X] Flesh out user documentation here in README
-+ [ ] Add automated tests
++ [X] Add automated tests (including full e2e testing with Playwright)
 + [ ] Profit
