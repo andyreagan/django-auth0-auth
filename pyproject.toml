@@ -18,7 +18,7 @@ dependencies = [
     "requests>=2.0.0"
 ]
 requires-python = ">=3.11"
-keywords = ["django", "auth0", "django auth", "django auth0"]
+keywords = ["django", "auth0", "django-auth", "django-auth0"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
@@ -33,8 +33,20 @@ classifiers = [
     "Framework :: Django :: 5.2",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "playwright>=1.40.0",
+    "pytest-playwright>=0.4.0",
+    "python-dotenv>=1.0.0"
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["auth0"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["test"]
+addopts = "--browser chromium"
+markers = [
+    "e2e: end-to-end tests that require a running server",
+]
