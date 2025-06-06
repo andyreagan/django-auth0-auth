@@ -9,6 +9,14 @@ Because this is fully integrated, we can use Django's built-in =@login_required=
 
 This project is not affiliated with Auth0.
 
+The names are slightly confusing because there are a lot of one-off projects 
+(like this one)
+on PyPI that attempt the same thing.
+The repo name here is =django-auth0-auth=, 
+the pypi name is =django-auth0-authbackend=,
+and the importable package is =auth0=.
+The installation instructions below reflect these names.
+
 ** Installation
 
 Install the package from PyPI:
