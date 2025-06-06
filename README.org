@@ -9,6 +9,14 @@ Because this is fully integrated, we can use Django's built-in =@login_required=
 
 This project is not affiliated with Auth0.
 
+** Installation
+
+Install the package from PyPI:
+
+#+begin_src
+pip install django-auth0-authbackend
+#+end_src
+
 ** Usage
 
 Take a look at the sample app provided in =sample/= to see how it's used in a MWE.
@@ -18,7 +26,7 @@ First, include the app in your apps in your Django settings:
 #+begin_src
 INSTALLED_APPS = [
     ...,
-    "django_auth0_auth",
+    "auth0",
 ]
 #+end_src
 
@@ -31,7 +39,7 @@ AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE")
 
 AUTHENTICATION_BACKENDS = [
-    "django_auth0_auth.backend.Auth0Backend",
+    "auth0.backend.Auth0Backend",
 ]
 #+end_src
 
@@ -42,7 +50,7 @@ from django.urls import path, include
 
 urlpatterns = [
     ...,
-    path("auth0/", include("django_auth0_auth.urls")),
+    path("auth0/", include("auth0.urls")),
 ]
 #+end_src
 

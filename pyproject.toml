@@ -34,7 +34,7 @@ classifiers = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["django-auth0-auth"]
+packages = ["auth0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

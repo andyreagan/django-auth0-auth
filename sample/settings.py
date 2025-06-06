@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_auth0_auth",
+    "auth0",
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ ROOT_URLCONF = "sample.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["django_auth0_auth/templates"],
+        "DIRS": ["auth0/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -129,5 +129,5 @@ AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE")
 
 AUTHENTICATION_BACKENDS = [
-    "django_auth0_auth.backend.Auth0Backend",
+    "auth0.backend.Auth0Backend",
 ]
