@@ -16,7 +16,7 @@ oauth.register(
     client_id=settings.AUTH0_CLIENT_ID,
     client_secret=settings.AUTH0_CLIENT_SECRET,
     client_kwargs={
-        "scope": "openid profile email",
+        "scope": getattr(settings, "AUTH0_SCOPES", "openid profile email"),
     },
     server_metadata_url=f"https://{settings.AUTH0_DOMAIN}/.well-known/openid-configuration",
 )
@@ -28,22 +28,22 @@ def get_callback_uri(request):
     Can be configured via AUTH0_CALLBACK_URI setting.
     Defaults to the auth0_callback URL.
     """
-    callback_uri_name = getattr(settings, 'AUTH0_CALLBACK_URI', 'auth0_callback')
-    
+    callback_uri_name = getattr(settings, "AUTH0_CALLBACK_URI", "auth0_callback")
+
     # If it's a URL name (default behavior)
-    if callback_uri_name in ['auth0_callback', 'auth0']:
+    if callback_uri_name in ["auth0_callback", "auth0"]:
         return request.build_absolute_uri(reverse(callback_uri_name))
-    
+
     # If it's a custom path, build the full URI
-    if callback_uri_name.startswith('/'):
+    if callback_uri_name.startswith("/"):
         return request.build_absolute_uri(callback_uri_name)
-    
+
     # If it's already a full URI, return as-is
-    if callback_uri_name.startswith('http'):
+    if callback_uri_name.startswith("http"):
         return callback_uri_name
-    
+
     # Default fallback
-    return request.build_absolute_uri(reverse('auth0_callback'))
+    return request.build_absolute_uri(reverse("auth0_callback"))
 
 
 def login(request):
