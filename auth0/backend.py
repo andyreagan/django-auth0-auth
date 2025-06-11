@@ -24,15 +24,28 @@ class Auth0Backend(BaseBackend):
         user, created = User.objects.get_or_create(
             **{
                 User.USERNAME_FIELD: user_info["sub"],
-                "defaults": {"is_active": True},
+                "defaults": {
+                    "is_active": True,
+                    "email": user_info.get("email"),
+                },
             }
         )
         print(f"user was {created=}")
 
-        # Ensure the user is active
+        # Ensure the user is active and set email if we have it
+        # Batch the two potential updates to the user model here
+        update_fields: list[str] = []
+
         if not user.is_active:
             user.is_active = True
-            user.save()
+            update_fields = ["is_active"]
+
+        if "email" in user_info and user.email is None:
+            user.email = user_info["email"]
+            update_fields.append("email")
+
+        if len(update_fields) > 0:
+            user.save(update_fields=update_fields)
 
         return user
 

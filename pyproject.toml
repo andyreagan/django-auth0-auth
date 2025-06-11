@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-auth0-authbackend"
-version = "0.0.9"
+version = "0.1.0"
 description = "Auth0 Authentication Backend for Django"
 authors = [{name = "Andy Reagan", email = "andy@andyreagan.com"}]
 license = "MIT"
