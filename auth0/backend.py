@@ -61,6 +61,33 @@ class Auth0Backend(BaseBackend):
                     if user_field not in update_fields:
                         update_fields.append(user_field)
 
+        # Handle staff and superuser permissions based on Auth0 groups/roles
+        # Get the field name that contains groups/roles (default: 'groups')
+        groups_field = getattr(settings, "AUTH0_GROUPS_FIELD", "groups")
+        user_groups = user_info.get(groups_field, [])
+
+        # Ensure user_groups is a list
+        if not isinstance(user_groups, list):
+            user_groups = [user_groups] if user_groups else []
+
+        # Check superuser group membership
+        superuser_group = getattr(settings, "AUTH0_SUPERUSER_GROUP", None)
+        if superuser_group:
+            new_superuser_status = superuser_group in user_groups
+            if user.is_superuser != new_superuser_status:
+                user.is_superuser = new_superuser_status
+                if "is_superuser" not in update_fields:
+                    update_fields.append("is_superuser")
+
+        # Check staff group membership
+        staff_group = getattr(settings, "AUTH0_STAFF_GROUP", None)
+        if staff_group:
+            new_staff_status = staff_group in user_groups
+            if user.is_staff != new_staff_status:
+                user.is_staff = new_staff_status
+                if "is_staff" not in update_fields:
+                    update_fields.append("is_staff")
+
         if len(update_fields) > 0:
             user.save(update_fields=update_fields)
 
