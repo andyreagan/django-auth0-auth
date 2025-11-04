@@ -61,6 +61,13 @@ AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE")
 # AUTH0_CALLBACK_URI = '/custom/path'  # Use custom path
 # AUTH0_CALLBACK_URI = 'https://example.com/callback'  # Use full URL
 
+# Optional: Map Auth0 user_info fields to Django User model fields
+# These fields will be synced from Auth0 on every login
+# AUTH0_USER_FIELD_MAPPING = {
+#     'first_name': 'given_name',  # User.first_name = user_info['given_name']
+#     'last_name': 'family_name',  # User.last_name = user_info['family_name']
+# }
+
 AUTHENTICATION_BACKENDS = [
     "auth0.backend.Auth0Backend",
 ]
@@ -125,6 +132,38 @@ The setting accepts:
 - Full URL (e.g., ='https://example.com/callback'=)
 
 *Note:* Make sure to update your Auth0 application's "Allowed Callback URLs" to match your configured callback URI.
+
+*** User Field Mapping Configuration
+
+You can automatically sync fields from Auth0's user_info to your Django User model on every login using the =AUTH0_USER_FIELD_MAPPING= setting. This is useful for keeping user profile information up-to-date.
+
+#+begin_src
+# Map Auth0 user_info fields to Django User model fields
+AUTH0_USER_FIELD_MAPPING = {
+    'first_name': 'given_name',    # User.first_name = user_info['given_name']
+    'last_name': 'family_name',     # User.last_name = user_info['family_name']
+    'field_foo': 'field_bar',       # User.field_foo = user_info['field_bar']
+}
+#+end_src
+
+The setting accepts a dictionary where:
+- *Keys* are Django User model field names
+- *Values* are Auth0 user_info field names
+
+*Important:*
+- Fields are synced on *every login*, not just on user creation
+- The email field is always synced automatically if present in user_info
+- Make sure the Django User model has the fields you're trying to map
+- Only fields present in user_info will be updated
+
+*Common Auth0 user_info fields:*
+- =given_name= - User's first name
+- =family_name= - User's last name
+- =nickname= - User's nickname
+- =name= - User's full name
+- =picture= - URL to user's profile picture
+- =email= - User's email (synced automatically)
+- =email_verified= - Email verification status
 
 ** Next steps
 
