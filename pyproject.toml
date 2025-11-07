@@ -36,6 +36,7 @@ classifiers = [
 [project.optional-dependencies]
 test = [
     "pytest>=7.0.0",
+    "pytest-django>=4.0.0",
     "playwright>=1.40.0",
     "pytest-playwright>=0.4.0",
     "python-dotenv>=1.0.0"
@@ -46,7 +47,12 @@ packages = ["auth0"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
-addopts = "--browser chromium"
+addopts = ""
 markers = [
-    "e2e: end-to-end tests that require a running server",
+    "e2e: end-to-end tests that require a running server (use --browser chromium)",
+    "django_db: mark test to get access to database",
 ]
+DJANGO_SETTINGS_MODULE = "sample.settings"
+python_files = ["test_*.py"]
+python_classes = ["Test*", "*TestCase"]
+python_functions = ["test_*"]
