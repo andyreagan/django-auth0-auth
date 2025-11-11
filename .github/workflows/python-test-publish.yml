@@ -31,7 +31,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e ".[test]"
         playwright install chromium
-    - name: Test with pytest
+    - name: Run unit tests
+      env:
+        AUTH0_CLIENT_ID: test-client-id
+        AUTH0_CLIENT_SECRET: test-client-secret
+        AUTH0_DOMAIN: test.auth0.com
+        AUTH0_AUDIENCE: test-audience
+      run: |
+        python -m pytest test/test_backend.py -v
+    - name: Run functional tests (E2E)
       env:
         AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
         AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
@@ -42,7 +50,7 @@ jobs:
         SECRET_KEY: 'test-secret-key-for-ci'
         DEBUG: 'True'
       run: |
-        pytest
+        python -m pytest test/test_login.py -v -m e2e --browser chromium
 
   publish:
     needs: test
