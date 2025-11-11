@@ -34,7 +34,7 @@ jobs:
         AUTH0_DOMAIN: test.auth0.com
         AUTH0_AUDIENCE: test-audience
       run: |
-        pytest test/test_backend.py -v
+        python -m pytest test/test_backend.py -v
 
   functional-tests:
     name: Functional Tests (E2E)
@@ -68,4 +68,4 @@ jobs:
         AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
         AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
       run: |
-        pytest test/test_login.py -v -m e2e --browser chromium
+        python -m pytest test/test_login.py -v -m e2e --browser chromium

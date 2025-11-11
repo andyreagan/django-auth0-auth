@@ -38,7 +38,7 @@ jobs:
         AUTH0_DOMAIN: test.auth0.com
         AUTH0_AUDIENCE: test-audience
       run: |
-        pytest test/test_backend.py -v
+        python -m pytest test/test_backend.py -v
     - name: Run functional tests (E2E)
       env:
         AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
@@ -50,7 +50,7 @@ jobs:
         SECRET_KEY: 'test-secret-key-for-ci'
         DEBUG: 'True'
       run: |
-        pytest test/test_login.py -v -m e2e --browser chromium
+        python -m pytest test/test_login.py -v -m e2e --browser chromium
 
   publish:
     needs: test
