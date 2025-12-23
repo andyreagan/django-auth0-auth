@@ -350,3 +350,270 @@ class Auth0BackendTestCase(TestCase):
         """Test that get_user returns None for nonexistent user"""
         retrieved_user = self.backend.get_user(99999)
         self.assertIsNone(retrieved_user)
+
+    def _create_jwt_token(self, payload: dict) -> str:
+        """Helper to create a mock JWT token with given payload"""
+        import base64
+        import json
+
+        # JWT format: header.payload.signature
+        header = base64.urlsafe_b64encode(json.dumps({"alg": "RS256"}).encode()).rstrip(b"=").decode()
+        payload_encoded = base64.urlsafe_b64encode(json.dumps(payload).encode()).rstrip(b"=").decode()
+        signature = "mock_signature"
+        return f"{header}.{payload_encoded}.{signature}"
+
+    def _create_mock_token_with_access_token(self, user_info, access_token_claims):
+        """Helper to create a mock token with both userinfo and access token claims"""
+        return {
+            "userinfo": user_info,
+            "access_token": self._create_jwt_token(access_token_claims),
+        }
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_mapping_on_user_creation(self, mock_authorize):
+        """Test that access token claims are used when creating a new user"""
+        user_info = {
+            "sub": "auth0|access_token_test",
+            "email": "test@example.com",
+        }
+        access_token_claims = {
+            "http://example.com/member_id": "member123",
+        }
+        mock_authorize.return_value = self._create_mock_token_with_access_token(
+            user_info, access_token_claims
+        )
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
+                "first_name": "http://example.com/member_id"
+            }
+        ):
+            user = self.backend.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.first_name, "member123")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_mapping_updates_existing_user(self, mock_authorize):
+        """Test that access token claims update existing users on login"""
+        # Create existing user with old data
+        user = self.User.objects.create(
+            username="auth0|access_update_test",
+            email="test@example.com",
+            first_name="OldValue",
+        )
+
+        user_info = {
+            "sub": "auth0|access_update_test",
+            "email": "test@example.com",
+        }
+        access_token_claims = {
+            "http://example.com/member_id": "NewValue",
+        }
+        mock_authorize.return_value = self._create_mock_token_with_access_token(
+            user_info, access_token_claims
+        )
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
+                "first_name": "http://example.com/member_id"
+            }
+        ):
+            self.backend.authenticate(request)
+
+        user.refresh_from_db()
+        self.assertEqual(user.first_name, "NewValue")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_not_updated_if_same(self, mock_authorize):
+        """Test that access token claims don't trigger update if unchanged"""
+        user = self.User.objects.create(
+            username="auth0|no_update_test",
+            email="test@example.com",
+            first_name="SameValue",
+        )
+
+        user_info = {
+            "sub": "auth0|no_update_test",
+            "email": "test@example.com",
+        }
+        access_token_claims = {
+            "http://example.com/member_id": "SameValue",
+        }
+        mock_authorize.return_value = self._create_mock_token_with_access_token(
+            user_info, access_token_claims
+        )
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
+                "first_name": "http://example.com/member_id"
+            }
+        ):
+            with patch.object(self.User, "save") as mock_save:
+                self.backend.authenticate(request)
+                # Save should not be called since value is the same
+                mock_save.assert_not_called()
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_mapping_with_missing_claim(self, mock_authorize):
+        """Test that missing claims in access token are handled gracefully"""
+        user_info = {
+            "sub": "auth0|missing_claim_test",
+            "email": "test@example.com",
+        }
+        access_token_claims = {
+            # Does not contain the mapped claim
+            "other_claim": "value",
+        }
+        mock_authorize.return_value = self._create_mock_token_with_access_token(
+            user_info, access_token_claims
+        )
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
+                "first_name": "http://example.com/member_id"
+            }
+        ):
+            user = self.backend.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.first_name, "")  # Should remain default empty string
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_mapping_empty_returns_empty_defaults(self, mock_authorize):
+        """Test that empty claim mapping returns no extra defaults"""
+        user_info = {
+            "sub": "auth0|empty_mapping_test",
+            "email": "test@example.com",
+        }
+        mock_authorize.return_value = self._create_mock_token(user_info)
+        request = self._create_mock_request()
+
+        # No AUTH0_ACCESS_TOKEN_CLAIM_MAPPING configured
+        user = self.backend.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, "test@example.com")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_with_no_access_token_in_response(self, mock_authorize):
+        """Test handling when token response has no access_token"""
+        user_info = {
+            "sub": "auth0|no_access_token_test",
+            "email": "test@example.com",
+        }
+        # Token without access_token key
+        mock_authorize.return_value = {"userinfo": user_info}
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
+                "first_name": "http://example.com/member_id"
+            }
+        ):
+            user = self.backend.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.first_name, "")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_access_token_claim_with_invalid_jwt(self, mock_authorize):
+        """Test handling of invalid JWT format"""
+        user_info = {
+            "sub": "auth0|invalid_jwt_test",
+            "email": "test@example.com",
+        }
+        mock_authorize.return_value = {
+            "userinfo": user_info,
+            "access_token": "not.a.valid.jwt.with.wrong.parts",
+        }
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
+                "first_name": "http://example.com/member_id"
+            }
+        ):
+            user = self.backend.authenticate(request)
+
+        self.assertIsNotNone(user)
+        self.assertEqual(user.first_name, "")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_class_attribute_claim_mapping(self, mock_authorize):
+        """Test that ACCESS_TOKEN_CLAIM_MAPPING class attribute works"""
+        from auth0.backend import Auth0Backend
+
+        class CustomBackend(Auth0Backend):
+            ACCESS_TOKEN_CLAIM_MAPPING = {
+                "first_name": "http://example.com/custom_field"
+            }
+
+        user_info = {
+            "sub": "auth0|class_attr_test",
+            "email": "test@example.com",
+        }
+        access_token_claims = {
+            "http://example.com/custom_field": "CustomValue",
+        }
+
+        backend = CustomBackend()
+        mock_authorize.return_value = self._create_mock_token_with_access_token(
+            user_info, access_token_claims
+        )
+        request = self._create_mock_request()
+
+        user = backend.authenticate(request)
+
+        self.assertEqual(user.first_name, "CustomValue")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_custom_get_extra_defaults_override(self, mock_authorize):
+        """Test that get_extra_defaults can be overridden in subclass"""
+        from auth0.backend import Auth0Backend
+
+        class CustomBackend(Auth0Backend):
+            def get_extra_defaults(self, token):
+                # Custom logic that returns hardcoded values
+                return {"first_name": "CustomOverride"}
+
+        user_info = {
+            "sub": "auth0|override_test",
+            "email": "test@example.com",
+        }
+        mock_authorize.return_value = self._create_mock_token(user_info)
+        request = self._create_mock_request()
+
+        backend = CustomBackend()
+        user = backend.authenticate(request)
+
+        self.assertEqual(user.first_name, "CustomOverride")
+
+    @patch("auth0.backend.oauth.auth0.authorize_access_token")
+    def test_combined_userinfo_and_access_token_claims(self, mock_authorize):
+        """Test that both userinfo field mapping and access token claims work together"""
+        user_info = {
+            "sub": "auth0|combined_test",
+            "email": "test@example.com",
+            "given_name": "FromUserInfo",
+        }
+        access_token_claims = {
+            "http://example.com/member_id": "FromAccessToken",
+        }
+        mock_authorize.return_value = self._create_mock_token_with_access_token(
+            user_info, access_token_claims
+        )
+        request = self._create_mock_request()
+
+        with override_settings(
+            AUTH0_USER_FIELD_MAPPING={"first_name": "given_name"},
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"last_name": "http://example.com/member_id"},
+        ):
+            user = self.backend.authenticate(request)
+
+        self.assertEqual(user.first_name, "FromUserInfo")
+        self.assertEqual(user.last_name, "FromAccessToken")
