@@ -1,3 +1,6 @@
+import base64
+import json
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
@@ -6,6 +9,66 @@ from .views import oauth
 
 
 class Auth0Backend(BaseBackend):
+    # Override in subclass to map model fields to access token claims
+    # Format: {"user_field": "access_token_claim_name"}
+    # Example: {"member_id": "http://example.com/member_id"}
+    ACCESS_TOKEN_CLAIM_MAPPING: dict[str, str] = {}
+
+    def get_extra_defaults(self, token) -> dict:
+        """Extract extra default values from the access token.
+
+        Override this method in subclasses for custom claim extraction logic.
+        Returns a dict of {user_field: value} to be used when creating/updating users.
+        """
+        # Get mapping from class attribute or settings
+        claim_mapping = self.ACCESS_TOKEN_CLAIM_MAPPING or getattr(
+            settings, "AUTH0_ACCESS_TOKEN_CLAIM_MAPPING", {}
+        )
+
+        if not claim_mapping:
+            return {}
+
+        # Decode the access token to extract claims
+        access_token = token.get("access_token")
+        if not access_token:
+            return {}
+
+        claims = self._decode_jwt_payload(access_token)
+        if not claims:
+            return {}
+
+        # Map claims to user fields
+        extra_defaults = {}
+        for user_field, claim_name in claim_mapping.items():
+            if claim_name in claims:
+                extra_defaults[user_field] = claims[claim_name]
+
+        return extra_defaults
+
+    def _decode_jwt_payload(self, jwt_token: str) -> dict:
+        """Decode the payload section of a JWT token without verification.
+
+        The token has already been validated by Auth0 during the OAuth flow,
+        so we only need to extract the claims from the payload.
+        """
+        try:
+            # JWT format: header.payload.signature
+            parts = jwt_token.split(".")
+            if len(parts) != 3:
+                return {}
+
+            # Decode the payload (second part)
+            # Add padding if needed for base64 decoding
+            payload = parts[1]
+            padding = 4 - len(payload) % 4
+            if padding != 4:
+                payload += "=" * padding
+
+            decoded = base64.urlsafe_b64decode(payload)
+            return json.loads(decoded)
+        except (ValueError, json.JSONDecodeError):
+            return {}
+
     def authenticate(self, request):
         # handle the token validation here
         token = oauth.auth0.authorize_access_token(request)
@@ -21,14 +84,21 @@ class Auth0Backend(BaseBackend):
         # Get the custom user model
         User = get_user_model()
 
+        # Get extra defaults from access token claims
+        extra_defaults = self.get_extra_defaults(token)
+
+        # Build defaults dict for user creation
+        defaults = {
+            "is_active": True,
+            "email": user_info.get("email"),
+            **extra_defaults,
+        }
+
         # Here you would typically create or get the user from your database
         user, created = User.objects.get_or_create(
             **{
                 User.USERNAME_FIELD: user_info["sub"],
-                "defaults": {
-                    "is_active": True,
-                    "email": user_info.get("email"),
-                },
+                "defaults": defaults,
             }
         )
         print(f"user was {created=}")
@@ -60,6 +130,14 @@ class Auth0Backend(BaseBackend):
                     setattr(user, user_field, new_value)
                     if user_field not in update_fields:
                         update_fields.append(user_field)
+
+        # Update fields from access token claims (extra_defaults)
+        for user_field, new_value in extra_defaults.items():
+            current_value = getattr(user, user_field, None)
+            if current_value != new_value:
+                setattr(user, user_field, new_value)
+                if user_field not in update_fields:
+                    update_fields.append(user_field)
 
         # Handle staff and superuser permissions based on Auth0 groups/roles
         # Get the field name that contains groups/roles (default: 'groups')
