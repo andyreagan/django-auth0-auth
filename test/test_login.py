@@ -33,18 +33,18 @@ def django_cli(*args: str) -> None:
 def django_server(port: int = 8000):
     """Context manager to run Django server in background"""
     print(f"Starting Django server on port {port}")
-    
+
     # Run migrations first
     django_cli("migrate")
-    
+
     # Start server
     cmd = ["python3", "manage.py", "runserver", str(port)]
     process = Popen(cmd, cwd=".", env=os.environ)
-    
+
     # Wait for server to be ready
     retries = 20
     time.sleep(2)  # Initial wait
-    
+
     while retries > 0:
         conn = HTTPConnection(f"localhost:{port}")
         try:
@@ -58,10 +58,10 @@ def django_server(port: int = 8000):
             print(f"Waiting for Django server... {retries} retries left")
             time.sleep(1)
             retries -= 1
-    
+
     if not retries:
         raise RuntimeError(f"Failed to start Django server on port {port}")
-    
+
     # Clean up
     print("Terminating Django server")
     process.terminate()
@@ -82,23 +82,23 @@ def test_auth0_login_flow(page: Page, running_server):
     # Get credentials from environment
     username = os.getenv("AUTH0_USERNAME")
     password = os.getenv("AUTH0_PASSWORD")
-    
+
     # Navigate to the auth0 login page
     page.goto("http://localhost:8000/auth0/")
-    
+
     # Verify initial page elements
     expect(page.get_by_role("heading", name="Auth0 Login")).to_be_visible()
     expect(page.get_by_role("button", name="Go to Login")).to_be_visible()
-    
+
     # Click "Go to Login" to start the Auth0 flow
     page.get_by_role("button", name="Go to Login").click()
-    
+
     # Wait for Auth0 login form to appear and fill credentials
     expect(page.get_by_role("textbox", name="Email address")).to_be_visible()
     page.get_by_role("textbox", name="Email address").fill(username)
     page.get_by_role("textbox", name="Password").fill(password)
     page.get_by_role("button", name="Continue", exact=True).click()
-    
+
     # Verify successful login - should redirect back to our app
     expect(page.get_by_role("heading", name="Auth0 Login")).to_be_visible()
     expect(page.get_by_role("link", name="Logout")).to_be_visible()
@@ -110,20 +110,20 @@ def test_auth0_logout_flow(page: Page, running_server):
     # First login (reuse login test logic)
     username = os.getenv("AUTH0_USERNAME")
     password = os.getenv("AUTH0_PASSWORD")
-    
+
     page.goto("http://localhost:8000/auth0/")
     page.get_by_role("button", name="Go to Login").click()
-    
+
     expect(page.get_by_role("textbox", name="Email address")).to_be_visible()
     page.get_by_role("textbox", name="Email address").fill(username)
     page.get_by_role("textbox", name="Password").fill(password)
     page.get_by_role("button", name="Continue", exact=True).click()
-    
+
     # Verify we're logged in
     expect(page.get_by_role("link", name="Logout")).to_be_visible()
-    
+
     # Click logout
     page.get_by_role("link", name="Logout").click()
-    
+
     # Verify we're logged out - should see login button again
     expect(page.get_by_role("button", name="Go to Login")).to_be_visible()

@@ -17,10 +17,10 @@ This project is not affiliated with Auth0.
 - Complete Django authentication backend integration using Django's built-in auth system
 - Support for modern Django (5+) and Python (3.11+) versions
 
-The names are slightly confusing because there are a lot of one-off projects 
+The names are slightly confusing because there are a lot of one-off projects
 (like this one)
 on PyPI that attempt the same thing.
-The repo name here is =django-auth0-auth=, 
+The repo name here is =django-auth0-auth=,
 the pypi name is =django-auth0-authbackend=,
 and the importable package is =auth0=.
 The installation instructions below reflect these names.

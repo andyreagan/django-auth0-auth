@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.test import TestCase, RequestFactory, override_settings
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import patch
 from auth0.backend import Auth0Backend
 
 
@@ -210,9 +210,7 @@ class Auth0BackendTestCase(TestCase):
         mock_authorize.return_value = self._create_mock_token(user_info)
         request = self._create_mock_request()
 
-        with override_settings(
-            AUTH0_GROUPS_FIELD="roles", AUTH0_SUPERUSER_GROUP="admin"
-        ):
+        with override_settings(AUTH0_GROUPS_FIELD="roles", AUTH0_SUPERUSER_GROUP="admin"):
             user = self.backend.authenticate(request)
 
         self.assertTrue(user.is_superuser)
@@ -244,9 +242,7 @@ class Auth0BackendTestCase(TestCase):
         mock_authorize.return_value = self._create_mock_token(user_info)
         request = self._create_mock_request()
 
-        with override_settings(
-            AUTH0_SUPERUSER_GROUP="admin", AUTH0_STAFF_GROUP="staff"
-        ):
+        with override_settings(AUTH0_SUPERUSER_GROUP="admin", AUTH0_STAFF_GROUP="staff"):
             user = self.backend.authenticate(request)
 
         self.assertIsNotNone(user)
@@ -357,8 +353,12 @@ class Auth0BackendTestCase(TestCase):
         import json
 
         # JWT format: header.payload.signature
-        header = base64.urlsafe_b64encode(json.dumps({"alg": "RS256"}).encode()).rstrip(b"=").decode()
-        payload_encoded = base64.urlsafe_b64encode(json.dumps(payload).encode()).rstrip(b"=").decode()
+        header = (
+            base64.urlsafe_b64encode(json.dumps({"alg": "RS256"}).encode()).rstrip(b"=").decode()
+        )
+        payload_encoded = (
+            base64.urlsafe_b64encode(json.dumps(payload).encode()).rstrip(b"=").decode()
+        )
         signature = "mock_signature"
         return f"{header}.{payload_encoded}.{signature}"
 
@@ -385,9 +385,7 @@ class Auth0BackendTestCase(TestCase):
         request = self._create_mock_request()
 
         with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
-                "first_name": "http://example.com/member_id"
-            }
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
         ):
             user = self.backend.authenticate(request)
 
@@ -417,9 +415,7 @@ class Auth0BackendTestCase(TestCase):
         request = self._create_mock_request()
 
         with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
-                "first_name": "http://example.com/member_id"
-            }
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
         ):
             self.backend.authenticate(request)
 
@@ -448,9 +444,7 @@ class Auth0BackendTestCase(TestCase):
         request = self._create_mock_request()
 
         with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
-                "first_name": "http://example.com/member_id"
-            }
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
         ):
             with patch.object(self.User, "save") as mock_save:
                 self.backend.authenticate(request)
@@ -474,9 +468,7 @@ class Auth0BackendTestCase(TestCase):
         request = self._create_mock_request()
 
         with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
-                "first_name": "http://example.com/member_id"
-            }
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
         ):
             user = self.backend.authenticate(request)
 
@@ -511,9 +503,7 @@ class Auth0BackendTestCase(TestCase):
         request = self._create_mock_request()
 
         with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
-                "first_name": "http://example.com/member_id"
-            }
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
         ):
             user = self.backend.authenticate(request)
 
@@ -534,9 +524,7 @@ class Auth0BackendTestCase(TestCase):
         request = self._create_mock_request()
 
         with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={
-                "first_name": "http://example.com/member_id"
-            }
+            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
         ):
             user = self.backend.authenticate(request)
 
@@ -549,9 +537,7 @@ class Auth0BackendTestCase(TestCase):
         from auth0.backend import Auth0Backend
 
         class CustomBackend(Auth0Backend):
-            ACCESS_TOKEN_CLAIM_MAPPING = {
-                "first_name": "http://example.com/custom_field"
-            }
+            ACCESS_TOKEN_CLAIM_MAPPING = {"first_name": "http://example.com/custom_field"}
 
         user_info = {
             "sub": "auth0|class_attr_test",
