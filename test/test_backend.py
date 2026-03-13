@@ -67,7 +67,7 @@ class Auth0BackendTestCase(TestCase):
         with override_settings(
             AUTH0_USER_FIELD_MAPPING={"first_name": "given_name", "last_name": "family_name"}
         ):
-            updated_user = self.backend.authenticate(request)
+            _updated_user = self.backend.authenticate(request)
 
         user.refresh_from_db()
         self.assertEqual(user.first_name, "NewFirst")
@@ -99,7 +99,7 @@ class Auth0BackendTestCase(TestCase):
     def test_email_not_updated_if_same(self, mock_authorize):
         """Test that email is not updated if it hasn't changed"""
         # Create existing user
-        user = self.User.objects.create(
+        self.User.objects.create(
             username="auth0|123",
             email="same@example.com",
         )
@@ -425,7 +425,7 @@ class Auth0BackendTestCase(TestCase):
     @patch("auth0.backend.oauth.auth0.authorize_access_token")
     def test_access_token_claim_not_updated_if_same(self, mock_authorize):
         """Test that access token claims don't trigger update if unchanged"""
-        user = self.User.objects.create(
+        self.User.objects.create(
             username="auth0|no_update_test",
             email="test@example.com",
             first_name="SameValue",
