@@ -1,5 +1,6 @@
 import base64
 import json
+from typing import ClassVar
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -12,7 +13,7 @@ class Auth0Backend(BaseBackend):
     # Override in subclass to map model fields to access token claims
     # Format: {"user_field": "access_token_claim_name"}
     # Example: {"member_id": "http://example.com/member_id"}
-    ACCESS_TOKEN_CLAIM_MAPPING: dict[str, str] = {}
+    ACCESS_TOKEN_CLAIM_MAPPING: ClassVar[dict[str, str]] = {}
 
     def get_extra_defaults(self, token) -> dict:
         """Extract extra default values from the access token.
