@@ -1,7 +1,9 @@
+from unittest.mock import patch
+
 import pytest
 from django.contrib.auth import get_user_model
-from django.test import TestCase, RequestFactory, override_settings
-from unittest.mock import patch
+from django.test import RequestFactory, TestCase, override_settings
+
 from auth0.backend import Auth0Backend
 
 

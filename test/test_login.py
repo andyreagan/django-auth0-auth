@@ -1,11 +1,12 @@
 import os
-import pytest
 import time
 from contextlib import contextmanager
-from subprocess import Popen, run
 from http.client import HTTPConnection
-from playwright.sync_api import Page, expect
+from subprocess import Popen, run
+
+import pytest
 from dotenv import load_dotenv
+from playwright.sync_api import Page, expect
 
 # Load environment variables from .env file if it exists
 load_dotenv()
