@@ -27,6 +27,7 @@ def django_cli(*args: str) -> None:
         ["python3", "manage.py"] + list(args),
         cwd=".",
         env=os.environ,
+        check=True,
     )
 
 

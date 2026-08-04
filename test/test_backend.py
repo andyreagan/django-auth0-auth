@@ -1,3 +1,4 @@
+from typing import ClassVar
 from unittest.mock import patch
 
 import pytest
@@ -445,13 +446,15 @@ class Auth0BackendTestCase(TestCase):
         )
         request = self._create_mock_request()
 
-        with override_settings(
-            AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
+        with (
+            override_settings(
+                AUTH0_ACCESS_TOKEN_CLAIM_MAPPING={"first_name": "http://example.com/member_id"}
+            ),
+            patch.object(self.User, "save") as mock_save,
         ):
-            with patch.object(self.User, "save") as mock_save:
-                self.backend.authenticate(request)
-                # Save should not be called since value is the same
-                mock_save.assert_not_called()
+            self.backend.authenticate(request)
+            # Save should not be called since value is the same
+            mock_save.assert_not_called()
 
     @patch("auth0.backend.oauth.auth0.authorize_access_token")
     def test_access_token_claim_mapping_with_missing_claim(self, mock_authorize):
@@ -539,7 +542,9 @@ class Auth0BackendTestCase(TestCase):
         from auth0.backend import Auth0Backend
 
         class CustomBackend(Auth0Backend):
-            ACCESS_TOKEN_CLAIM_MAPPING = {"first_name": "http://example.com/custom_field"}
+            ACCESS_TOKEN_CLAIM_MAPPING: ClassVar[dict[str, str]] = {
+                "first_name": "http://example.com/custom_field"
+            }
 
         user_info = {
             "sub": "auth0|class_attr_test",
