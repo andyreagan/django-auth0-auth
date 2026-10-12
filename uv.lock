@@ -362,7 +362,7 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "5.2.17"
+version = "5.2.18"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version < '3.12'",
@@ -372,14 +372,14 @@ dependencies = [
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d5/d8/43e9d000519adceb189620b6869ff88031e046df91c2e9da72f8f6918399/django-5.2.17.tar.gz", hash = "sha256:9d4d93be539a18ab80d058eb515900e10951e04c537c5a6b394fc49528d3251f", size = 10889740, upload-time = "2026-08-04T15:04:03.173Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/fe/79e692b430c7721bf4b812c328bfe687e73e3f28f56611a6a18a97e887cc/django-5.2.18.tar.gz", hash = "sha256:461c5dd06d2ea16bd5ca37d3f46e4def1d6b0fe7588c6f4e2119517bb0af8b2d", size = 10910238, upload-time = "2026-10-06T13:01:09.371Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/df/f8/ce120525ca78f12b07daf65786679c5d0b54a75285a8958d3ae55e39da35/django-5.2.17-py3-none-any.whl", hash = "sha256:f04fb3b36ee119e1af4fa1d397d5fd6cf12700f49321e84d4f4c642c5b1973db", size = 8315563, upload-time = "2026-08-04T15:03:59.1Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/01/6568ec52b26548ca1b83d33249f7274db3bf74698f42c0da42ec9db1a24a/django-5.2.18-py3-none-any.whl", hash = "sha256:92ed81d500be6408ecd704d7bd1366c534f30427bffcc63c5fefb129561aec7c", size = 8316071, upload-time = "2026-10-06T13:01:04.413Z" },
 ]
 
 [[package]]
 name = "django"
-version = "6.1.1"
+version = "6.1.2"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -389,9 +389,9 @@ dependencies = [
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f8/d4/8314b5bdef20832f0ac6ae3b3e4d4924e4759fa3b4af27609dd747e7a6be/django-6.1.1.tar.gz", hash = "sha256:7ab93536d8e677aa14554c56426290c69480bf2ee68d7513d4a22f57d6bfeb84", size = 11284905, upload-time = "2026-09-02T17:20:45.621Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/89/24/20d187a22ac821288b53c53b8f696019dcb0c7b4f973f052ade19392c74d/django-6.1.2.tar.gz", hash = "sha256:a1e92451ccb8b514e91bbb3b6d186d20b4030558f116b5d9de6535455ff210b7", size = 11251425, upload-time = "2026-10-06T12:53:29.622Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8d/ca/c1040a4fd15754ede7df15fd72fc2e123045b473b253ab5f5284e11c651e/django-6.1.1-py3-none-any.whl", hash = "sha256:585fb82bf15053c42cf52e67c2f1b54a032dca384759315fd6678ab1870d1d72", size = 8419512, upload-time = "2026-09-02T17:20:39.153Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/83/90ff2dbfac7b519ed77620bdbb827cd2d1a83faf00d076bf95056428bce7/django-6.1.2-py3-none-any.whl", hash = "sha256:141efee6ec64d1db6db90683bf734c550102450f444fb099063b0be1bd27d991", size = 8420684, upload-time = "2026-10-06T12:53:17.381Z" },
 ]
 
 [[package]]
@@ -400,8 +400,8 @@ version = "0.3.3"
 source = { editable = "." }
 dependencies = [
     { name = "authlib" },
-    { name = "django", version = "5.2.17", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "django", version = "6.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "django", version = "5.2.18", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "django", version = "6.1.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "requests" },
 ]
 
@@ -515,11 +515,11 @@ wheels = [
 
 [[package]]
 name = "iniconfig"
-version = "2.3.0"
+version = "2.3.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/72/34/14ca021ce8e5dfedc35312d08ba8bf51fdd999c576889fc2c24cb97f4f10/iniconfig-2.3.0.tar.gz", hash = "sha256:c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d8c4730", size = 20503, upload-time = "2025-10-18T21:55:43.219Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/e1/2069291243c926a2ff1cd706c7f3eeb9b62144bf60f77c9fb9ff2fb26bd3/iniconfig-2.3.1.tar.gz", hash = "sha256:67f4b9c50da0dedf52af349e7749a80a9057a5031199791b906c3bb3ae878960", size = 21209, upload-time = "2026-10-06T22:48:38.076Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/b1/3846dd7f199d53cb17f49cba7e651e9ce294d8497c8c150530ed11865bb8/iniconfig-2.3.0-py3-none-any.whl", hash = "sha256:f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12", size = 7484, upload-time = "2025-10-18T21:55:41.639Z" },
+    { url = "https://files.pythonhosted.org/packages/56/43/4ca9e49d27a1fcf6bece6f6aec0ea46bb9112489b93d4b688fb415457bdb/iniconfig-2.3.1-py3-none-any.whl", hash = "sha256:9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7", size = 7552, upload-time = "2026-10-06T22:48:36.959Z" },
 ]
 
 [[package]]
@@ -573,11 +573,11 @@ wheels = [
 
 [[package]]
 name = "pycparser"
-version = "3.0"
+version = "3.11"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/1b/7d/92392ff7815c21062bea51aa7b87d45576f649f16458d78b7cf94b9ab2e6/pycparser-3.0.tar.gz", hash = "sha256:600f49d217304a5902ac3c37e1281c9fe94e4d0489de643a9504c5cdfdfc6b29", size = 103492, upload-time = "2026-01-21T14:26:51.89Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/a8/c5fdbeee588bb8ada9458774f43adf1bdd30bd59157055142183e769a024/pycparser-3.11.tar.gz", hash = "sha256:d875f09c3507d00e1aba0eecc6dcadc1352f30fff09dc6bff2f1c2935e97c2bc", size = 113796, upload-time = "2026-10-09T12:56:59.539Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/c3/44f3fbbfa403ea2a7c779186dc20772604442dde72947e7d01069cbe98e3/pycparser-3.0-py3-none-any.whl", hash = "sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992", size = 48172, upload-time = "2026-01-21T14:26:50.693Z" },
+    { url = "https://files.pythonhosted.org/packages/90/11/0e6f11117525ff0eec40ebac3d313376f102df93ca44ad9e893ee85e4f89/pycparser-3.11-py3-none-any.whl", hash = "sha256:51d5a8ba2be0bbe440b99d2112604c95bbbc3c2748a64260186c541e1729cd80", size = 51178, upload-time = "2026-10-09T12:56:58.131Z" },
 ]
 
 [[package]]
@@ -618,19 +618,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pytest-base-url"
-version = "2.1.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pytest" },
-    { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ae/1a/b64ac368de6b993135cb70ca4e5d958a5c268094a3a2a4cac6f0021b6c4f/pytest_base_url-2.1.0.tar.gz", hash = "sha256:02748589a54f9e63fcbe62301d6b0496da0d10231b753e950c63e03aee745d45", size = 6702, upload-time = "2024-01-31T22:43:00.81Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/1c/b00940ab9eb8ede7897443b771987f2f4a76f06be02f1b3f01eb7567e24a/pytest_base_url-2.1.0-py3-none-any.whl", hash = "sha256:3ad15611778764d451927b2a53240c1a7a591b521ea44cebfe45849d2d2812e6", size = 5302, upload-time = "2024-01-31T22:42:58.897Z" },
-]
-
-[[package]]
 name = "pytest-django"
 version = "4.14.0"
 source = { registry = "https://pypi.org/simple" }
@@ -644,17 +631,16 @@ wheels = [
 
 [[package]]
 name = "pytest-playwright"
-version = "0.9.0"
+version = "0.10.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "playwright" },
     { name = "pytest" },
-    { name = "pytest-base-url" },
     { name = "python-slugify" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/26/c4/31cab1a9edfa35546950bb30c033dbfe4d4f3a216f4bafb0537a1469a70c/pytest_playwright-0.9.0.tar.gz", hash = "sha256:bd44daa852b0fb8b0e55a2f88b727507dedda0e350bea5d09420647252f2454b", size = 17899, upload-time = "2026-08-10T10:20:16.407Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/de/1c45f90a545771201ac11aead321ced92b66190da56f2138ee1ee78cee8a/pytest_playwright-0.10.0.tar.gz", hash = "sha256:47baf574dfb120bb53675d05c9784f8bf94e04c6dd7477dc56159ce732191952", size = 22634, upload-time = "2026-10-08T22:38:46.758Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ab/70/72ff5c3833f0faa9b5fb23f24c0a606f070ad33bb61b802ba38dfe125e7d/pytest_playwright-0.9.0-py3-none-any.whl", hash = "sha256:9d9dc74e335c647944cecfffa706cc9e6e4bf4c25e84592c128b584d494d4471", size = 17915, upload-time = "2026-08-10T10:20:18.253Z" },
+    { url = "https://files.pythonhosted.org/packages/09/15/ab14dfdfd6756389e0a5467417863cf6fffa18ecfba0a68bfdc15dc5895a/pytest_playwright-0.10.0-py3-none-any.whl", hash = "sha256:8314d1af726e2c15531635902ece3ee47ed83f5a75c937a7eda8686d3dae6c0d", size = 22485, upload-time = "2026-10-08T22:38:49.089Z" },
 ]
 
 [[package]]
@@ -668,14 +654,14 @@ wheels = [
 
 [[package]]
 name = "python-slugify"
-version = "8.0.4"
+version = "9.1.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "text-unidecode" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/87/c7/5e1547c44e31da50a460df93af11a535ace568ef89d7a811069ead340c4a/python-slugify-8.0.4.tar.gz", hash = "sha256:59202371d1d05b54a9e7720c5e038f928f45daaffe41dd10822f3907b937c856", size = 10921, upload-time = "2024-02-08T18:32:45.488Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/e8/26b1af09d728d604dc16427a39f53985b22a170dbd61addac3f48db73f03/python_slugify-9.1.3.tar.gz", hash = "sha256:90e997f2e0987239ce95e12f700086eb18e1d1d3ee22624fbbdbd095afca42b6", size = 66093, upload-time = "2026-10-07T01:06:20.101Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a4/62/02da182e544a51a5c3ccf4b03ab79df279f9c60c5e82d5e8bec7ca26ac11/python_slugify-8.0.4-py2.py3-none-any.whl", hash = "sha256:276540b79961052b66b7d116620b36518847f52d5fd9e3a70164fc8c50faa6b8", size = 10051, upload-time = "2024-02-08T18:32:43.911Z" },
+    { url = "https://files.pythonhosted.org/packages/47/67/5598c98725332a6a4084c7b622d5a1ebe7d6745c1d2f434c9e4e89e04cba/python_slugify-9.1.3-py3-none-any.whl", hash = "sha256:9aced0670e54c5603e2335c0fa9a4011ad4bc41ecb3c46e8097294c46fd60ed4", size = 16032, upload-time = "2026-10-07T01:06:18.891Z" },
 ]
 
 [[package]]
